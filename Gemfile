@@ -15,6 +15,8 @@ end
 gem "haml-rails"
 gem 'jquery-rails'
 
+gem 'tire'
+
 gem 'unicorn'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
 gem "sinatra", :require => "sinatra/base"
