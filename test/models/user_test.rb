@@ -2,6 +2,7 @@
 require_relative '../test_helper'
 require "webmock"
 include WebMock::API
+WebMock.disable_net_connect!(:allow_localhost => true)
 
 describe User do
   include TestHelper

@@ -43,6 +43,10 @@ class Update
   # Remote Update url: (nil if local)
   key :referral_url, String
 
+  searchable do
+    text :text
+  end
+  
   def referral
     Update.first(:id => referral_id)
   end

@@ -5,6 +5,7 @@ require 'rack/test'
 VCR.config do |c|
   c.cassette_library_dir = 'test/data/vcr_cassettes'
   c.stub_with :webmock
+  c.default_cassette_options = { :record => :all }
 end
 
 module AcceptanceHelper

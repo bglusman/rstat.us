@@ -12,6 +12,7 @@ group :assets do
   gem 'uglifier'
 end
 
+gem 'sunspot_mongo_mapper'
 gem "haml-rails"
 gem 'jquery-rails'
 
@@ -40,6 +41,10 @@ gem "delayed_job_mongo_mapper", :git => "git://github.com/earbits/delayed_job_mo
 gem "whenever"
 
 group :development, :test do
+  gem 'sunspot_rails', :git => 'https://github.com/sunspot/sunspot.git', :ref => '79175ea'
+  #gem 'sunspot_solr', :git => 'https://github.com/sunspot/sunspot', :ref => '79175ea'
+  gem 'sunspot_solr', :git => 'https://github.com/sunspot/sunspot', :ref => 'ada19e5'
+  # as per http://stackoverflow.com/questions/8152951/solr-connection-refused-error-after-java-update-on-mac-os-x-lion
   gem 'rack-test'
   gem "database_cleaner"
   gem "factory_girl"
@@ -54,4 +59,6 @@ end
 
 group :test do
   gem "webmock"
+  #gem "sunspot_matchers"
+  #gem "sunspot-rails-tester"
 end
