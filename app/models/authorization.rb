@@ -5,6 +5,7 @@ class Authorization
   # If you don't hook up an Authorization to a User... you're not making much
   # sense.
   belongs_to :user
+  key :user_id, ObjectId
 
   key :uid,          Integer, required: true
   key :provider,     String,  required: true
@@ -46,9 +47,7 @@ class Authorization
 
     # If there isn't a user, create a user and author.
     if user.nil?
-      domain = base_uri[/\:\/\/(.*?)\//, 1]
-
-      author = Author.create_from_hash!(hsh, domain)
+      author = Author.create_from_hash!(hsh, base_uri)
       user   = User.create(
                  :author   => author,
                  :username => author.username

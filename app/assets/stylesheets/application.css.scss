@@ -3,10 +3,13 @@
  *= require "lib/css3buttons"
  *= require "typography"
  *= require "layout"
- *= require "home"
+ *= require "static"
  *= require "content"
  *= require "forms"
  */
 
 @import "blueprint/reset";
 @import "blueprint";
+
+@import "lib/base";
+@import "partials/flash";

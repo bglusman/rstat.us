@@ -5,8 +5,16 @@ describe "search" do
   include AcceptanceHelper
 
   before do
+    Update.create_search_index
     @update_text = "These aren't the droids you're looking for!"
     Factory(:update, :text => @update_text)
+    @hashtag_update_text = "This is a test #hashtag"
+    Factory(:update, :text => @hashtag_update_text)
+    Update.search_index.refresh
+  end
+
+  after do
+    Update.delete_search_index
   end
 
   describe "logged in" do
@@ -92,13 +100,21 @@ describe "search" do
     end
 
     it "gets a match for hashtag search" do
-      @hashtag_update_text = "This is a test #hashtag"
-      Factory(:update, :text => @hashtag_update_text)
       visit "/search"
       fill_in "q", :with => "#hashtag"
       click_button "Search"
 
       assert has_link? "#hashtag"
     end
+
+    it "gets a match for words in the update out of order" do
+      visit "/search"
+
+      fill_in "q", :with => "for looking"
+      click_button "Search"
+
+      assert_match @update_text, page.body
+    end
+
   end
 end

@@ -24,11 +24,19 @@ class Feed
   key :hubs, Array
 
   belongs_to :author
+  key :author_id, ObjectId
+
   many :updates
 
   timestamps!
 
   after_create :default_hubs
+
+   # This is because sometimes the mongomapper association returns nil
+  # even though there is an author_id and the Author exists; see Issue #421
+  def author
+    Author.find(author_id)
+  end
 
   def populate(xrd = nil)
     # TODO: More entropy would be nice
@@ -48,6 +56,7 @@ class Feed
                                 :username => a.name,
                                 :email => a.email,
                                 :remote_url => a.uri,
+                                :domain => a.uri,
                                 :salmon_url => ostatus_feed.salmon,
                                 :bio => a.portable_contacts.note,
                                 :image_url => avatar_url)

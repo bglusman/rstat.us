@@ -15,6 +15,8 @@ end
 gem "haml-rails"
 gem 'jquery-rails'
 
+gem 'tire'
+
 gem 'unicorn'
 gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git'
 gem "sinatra", :require => "sinatra/base"
@@ -33,6 +35,7 @@ gem "nokogiri"
 gem "tzinfo"
 gem "rsa"
 gem "exceptional"
+gem "newrelic_rpm"
 
 # background job queue
 gem "delayed_job", :git => "git://github.com/collectiveidea/delayed_job.git", :tag => "v2.1.4"

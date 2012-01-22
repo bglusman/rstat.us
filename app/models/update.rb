@@ -4,14 +4,20 @@ class Update
   require 'cgi'
   include MongoMapper::Document
 
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
+
+
   # Determines what constitutes a username inside an update text
   USERNAME_REGULAR_EXPRESSION = /(^|[ \t\n\r\f"'\(\[{]+)@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)])(?:@([^ \t\n\r\f&?=@%\/\#]*[^ \t\n\r\f&?=@%\/\#.!:;,"'\]}\)]))?/
 
   # Updates are aggregated in Feeds
   belongs_to :feed
+  key :feed_id, ObjectId
 
   # Updates are written by Authors
   belongs_to :author
+  key :author_id, ObjectId
   validates_presence_of :author_id
 
   # The content of the update, unaltered, is stored here
@@ -31,6 +37,7 @@ class Update
   # For speed, we generate the html for the update lazily when it is rendered
   key :html, String
 
+
   # We also generate the tags upon editing the update
   before_save :get_tags
 
@@ -42,6 +49,12 @@ class Update
   key :referral_id
   # Remote Update url: (nil if local)
   key :referral_url, String
+
+  index_name "#{Rails.env}-#{Rails.application.class.to_s.downcase}-update"
+
+  def to_indexed_json
+    self.to_json
+  end
 
   def referral
     Update.first(:id => referral_id)
@@ -105,6 +118,22 @@ class Update
 
   def to_xml(base_uri)
     to_atom(base_uri).to_xml
+  end
+
+  class << self
+    def create_search_index
+      Tire.index(Update.index_name) do
+        create
+      end
+    end
+
+    def delete_search_index
+      search_index.delete
+    end
+
+    def search_index
+      Tire.index(Update.index_name)
+    end
   end
 
   protected
