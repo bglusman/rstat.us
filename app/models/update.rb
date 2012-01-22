@@ -50,7 +50,7 @@ class Update
   # Remote Update url: (nil if local)
   key :referral_url, String
 
-  index_name 'mongo-updates'
+  index_name "#{Rails.env}-#{Rails.application.class.to_s.downcase}-update"
 
   def to_indexed_json
     self.to_json
@@ -118,6 +118,22 @@ class Update
 
   def to_xml(base_uri)
     to_atom(base_uri).to_xml
+  end
+
+  class << self
+    def create_search_index
+      Tire.index(Update.index_name) do
+        create
+      end
+    end
+
+    def delete_search_index
+      search_index.delete
+    end
+
+    def search_index
+      Tire.index(Update.index_name)
+    end
   end
 
   protected

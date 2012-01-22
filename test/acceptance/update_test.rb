@@ -118,6 +118,14 @@ describe "update" do
   end
 
   describe "update with hashtag" do
+    before do
+      Update.create_search_index
+    end
+
+    after do
+      Update.delete_search_index
+    end
+
     it "creates a working hashtag link" do
       u = Factory(:user)
       a = Factory(:authorization, :user => u)
@@ -127,6 +135,8 @@ describe "update" do
       visit "/updates"
       fill_in "text", :with => "So this one time #coolstorybro"
       VCR.use_cassette('publish_to_hub') {click_button "Share"}
+
+      Update.search_index.refresh
 
       visit "/updates"
       click_link "#coolstorybro"
